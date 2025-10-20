@@ -1,21 +1,55 @@
-class NaveDeCarga {
+class Nave{
+	var property velocidad
 
-	var velocidad = 0
+	method recibirAmenaza(){}
+
+	method propulsar() {
+		velocidad = 300000.min(velocidad + 20000)
+	}
+
+	method prepararViaje(){
+		velocidad = 300000.min(velocidad + 15000)
+	}
+
+	method encontrarEnemigo(){
+		self.recibirAmenaza()
+	}
+}
+class NaveDeCarga inherits Nave{
+
 	var property carga = 0
 
 	method sobrecargada() = carga > 100000
 
 	method excedidaDeVelocidad() = velocidad > 100000
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		carga = 0
 	}
 
 }
 
-class NaveDePasajeros {
+class NaveCargaResiduosRadiactivos inherits NaveDeCarga{
+	var property sellado = false
 
-	var velocidad = 0
+	method sellarAlVacio(){
+		sellado = true
+	}
+
+	override method recibirAmenaza(){
+		self.velocidad(0)
+	}
+
+	override method prepararViaje() {
+		velocidad = 300000.min(velocidad + 15000)
+		self.sellarAlVacio()
+	}
+}
+
+
+
+class NaveDePasajeros inherits Nave{
+
 	var property alarma = false
 	const cantidadDePasajeros = 0
 
@@ -25,14 +59,13 @@ class NaveDePasajeros {
 
 	method estaEnPeligro() = velocidad > self.velocidadMaximaLegal() or alarma
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		alarma = true
 	}
 
 }
 
-class NaveDeCombate {
-	var property velocidad = 0
+class NaveDeCombate inherits Nave{
 	var property modo = reposo
 	const property mensajesEmitidos = []
 
@@ -44,8 +77,17 @@ class NaveDeCombate {
 
 	method estaInvisible() = velocidad < 10000 and modo.invisible()
 
-	method recibirAmenaza() {
+	override method recibirAmenaza() {
 		modo.recibirAmenaza(self)
+	}
+
+	override method prepararViaje(){
+		velocidad = 300000.min(velocidad + 15000)
+		if(modo == reposo){
+			self.error("Saliendo en misión")
+		}else{
+			self.error("Volviendo a la base")
+		}
 	}
 
 }
