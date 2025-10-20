@@ -83,11 +83,8 @@ class NaveDeCombate inherits Nave{
 
 	override method prepararViaje(){
 		velocidad = 300000.min(velocidad + 15000)
-		if(modo == reposo){
-			self.error("Saliendo en misión")
-		}else{
-			self.error("Volviendo a la base")
-		}
+		modo.prepararViaje()
+
 	}
 
 }
@@ -100,6 +97,10 @@ object reposo {
 		nave.emitirMensaje("¡RETIRADA!")
 	}
 
+	method prepararViaje(){
+		NaveDeCombate.emitirMensaje("Volviendo a la base")
+	}
+
 }
 
 object ataque {
@@ -110,4 +111,7 @@ object ataque {
 		nave.emitirMensaje("Enemigo encontrado")
 	}
 
+	method prepararViaje(){
+		NaveDeCombate.emitirMensaje("Saliendo en misión")
+	}
 }
